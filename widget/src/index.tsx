@@ -26,6 +26,9 @@ function mkGraph({nodes, dot} : Graph) {
   useEffect(() => {
     graphviz(graphRef.current)
       .renderDot(dot)
+      .onerror((e) => {
+        d3.select(graphRef.current).text(e);
+      })
       .on("end", () => {
 
         d3.select(graphRef.current).select('polygon').style("fill", "transparent");
