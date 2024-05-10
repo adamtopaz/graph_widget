@@ -18,11 +18,11 @@ interface Graph {
 }
 
 export default ({nodes, dot} : Graph) => {
-  const nodeMap = new Map(nodes.map(node => [node.id, node]))
   const graphRef = useRef<HTMLDivElement>(null);
   const [infoState, setInfoState] = useState<string>("");
 
   useEffect(() => {
+    const nodeMap = new Map(nodes.map(node => [node.id, node]))
     graphviz(graphRef.current)
       .renderDot(dot)
       .onerror((e) => {
