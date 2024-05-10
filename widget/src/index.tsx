@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from 'd3';
-import { graphviz, GraphvizOptions } from 'd3-graphviz';
-import { createRoot } from 'react-dom/client'
+import { graphviz } from 'd3-graphviz';
 import remarkMath from 'remark-math'
 import Markdown from 'react-markdown';
 
