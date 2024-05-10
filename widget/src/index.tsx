@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as d3 from 'd3';
 import { graphviz, GraphvizOptions } from 'd3-graphviz';
 import { createRoot } from 'react-dom/client'
@@ -21,7 +21,7 @@ interface Graph {
 function mkGraph({nodes, dot} : Graph) {
   const nodeMap = new Map(nodes.map(node => [node.id, node]))
   const graphRef = useRef<HTMLDivElement>(null);
-  const infoRef = useRef<HTMLDivElement>(null);
+  const [infoState, setInfoState] = useState<string>("");
 
   useEffect(() => {
     graphviz(graphRef.current)
@@ -55,20 +55,9 @@ function mkGraph({nodes, dot} : Graph) {
             event.stopPropagation();
             const nodeId = d3.select(this).attr("id");
             const node = nodeMap.get(nodeId);
-            const nodeInfo = d3.select(infoRef.current);
 
             if (node) {
-              nodeInfo.html('');
-              const typeDiv = nodeInfo.append("div").node();
-              if (typeDiv) {
-                const typeRoot = createRoot(typeDiv);
-                typeRoot.render(
-                  // @ts-ignore
-                  <Markdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeMathjax]}>
-                    {node.info}
-                  </Markdown>
-                )
-              };
+              setInfoState(node.info);
             };
 
           });
@@ -76,9 +65,7 @@ function mkGraph({nodes, dot} : Graph) {
 
         d3.select(graphRef.current)
           .on("click", () => {
-            const nodeInfo = d3.select(infoRef.current);
-            nodeInfo.html('');
-            //nodeInfo.text("Node information will appear here.");
+            setInfoState("");
           });
       });
   }, [nodes, dot]);
@@ -86,7 +73,9 @@ function mkGraph({nodes, dot} : Graph) {
   return (
     <div>
       <div ref={graphRef} />
-      <div ref={infoRef} />
+      <Markdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeMathjax]}>
+        {infoState}
+      </Markdown>
     </div>
   );
 }
