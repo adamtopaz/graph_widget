@@ -18,7 +18,7 @@ interface Graph {
   dot : string
 }
 
-function mkGraph({nodes, dot} : Graph) {
+export default ({nodes, dot} : Graph) => {
   const nodeMap = new Map(nodes.map(node => [node.id, node]))
   const graphRef = useRef<HTMLDivElement>(null);
   const [infoState, setInfoState] = useState<string>("");
@@ -79,7 +79,3 @@ function mkGraph({nodes, dot} : Graph) {
     </div>
   );
 }
-
-export default (graph : Graph) => {
-  return mkGraph(graph)
-};
